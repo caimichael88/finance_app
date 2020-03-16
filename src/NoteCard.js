@@ -32,6 +32,9 @@ export default function NoteCard(props) {
             <Typography gutterBottom variant="h5" component="h2">
               {props.text}
             </Typography>
+            <Typography variant="body1" component="p">
+              {`By ${props.user.firstName} ${props.user.lastName}`}
+            </Typography>
           </CardContent>
         </Card>
       </Grid>

@@ -50,6 +50,7 @@ export default function Album() {
       <main>
         <Switch>
           <Route exact path="/" component={NoteList}/>
+          <Route path="/note/edit/:id" component={NoteForm} />>
           <Route path="/note/create" component={NoteForm} />
         </Switch>
       </main>

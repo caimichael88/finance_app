@@ -20,3 +20,27 @@ exports.createNote = async (data) => {
     throw err;
   }
 };
+
+exports.getNoteById = async (id) =>{
+  try {
+    const note = await Notes.findById(id).populate({ path: 'user', select: 'firstName lastName' });;
+    return note;
+  }catch( err ) {
+    throw err; 
+  }
+}
+
+exports.updateNoteById = async (note) =>{
+  try{
+    const n = await Notes.findOne({
+      user: note.user,
+      _id: note.id,
+    });
+
+    n.text = note.text;
+    const savedNote = await n.save();
+    return savedNote;
+  }catch( err ) {
+    throw err;
+  }
+}

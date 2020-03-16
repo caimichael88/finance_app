@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Container from '@material-ui/core/Container'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
@@ -26,12 +26,38 @@ export default function NoteForm (props) {
   const [ note, updateNote ] = useState('');
   const [ error, updateError ] = useState(undefined);
 
+  async function getNoteById(id) {
+    try{
+      const token = getToken();
+      const response = await fetch(`/api/notes/${id}`, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },       
+      });
+      const data = await response.json();
+      if(!response.ok){
+        throw new Error(data.message);
+      }
+
+      updateNote(data.data.text);
+    }catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    getNoteById(props.match.params.id);
+  }, [props.match.params.id]);
+
   async function handleSubmit(e) {
     try {
       e.preventDefault();
       const token = getToken();
-      const response = await fetch('/api/notes', {
-        method: 'POST',
+      const updateId = props.match.params.id;
+      const url = updateId ? `/api/notes/${props.match.params.id}` : 'api/notes';
+      const method = updateId ? 'PUT' : 'POST';
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
           authorization: `Bearer ${token}`,
